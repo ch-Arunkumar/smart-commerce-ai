@@ -22,14 +22,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-
-# Dependencies
-node_modules/
-
-# Environment files
-.env
-server/.env
-client/.env
-
-# Logs
-*.log
