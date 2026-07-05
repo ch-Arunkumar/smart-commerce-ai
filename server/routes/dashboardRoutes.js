@@ -32,7 +32,7 @@ router.get("/stats", async (req, res) => {
     ).length;
 
     const inventoryValue = products.reduce(
-      (sum, p) => sum + (p.price * p.stock),
+      (sum, p) => sum + p.price * p.stock,
       0
     );
 
@@ -51,7 +51,6 @@ router.get("/stats", async (req, res) => {
       totalRevenue,
       totalOrders: orders.length,
     });
-
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -67,8 +66,7 @@ router.get("/category-chart", async (req, res) => {
     const map = {};
 
     products.forEach((p) => {
-      map[p.category] =
-        (map[p.category] || 0) + 1;
+      map[p.category] = (map[p.category] || 0) + 1;
     });
 
     const result = Object.keys(map).map((key) => ({
@@ -77,33 +75,30 @@ router.get("/category-chart", async (req, res) => {
     }));
 
     res.json(result);
-
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
-/*pie chart*/
+
+/* =======================
+   INVENTORY PIE
+======================= */
 router.get("/inventory-pie", async (req, res) => {
   try {
     const products = await Product.find();
 
     const inStock = products.filter(p => p.stock > 5).length;
-    const lowStock = products.filter(
-      p => p.stock > 0 && p.stock <= 5
-    ).length;
-    const outOfStock = products.filter(
-      p => p.stock === 0
-    ).length;
+    const lowStock = products.filter(p => p.stock > 0 && p.stock <= 5).length;
+    const outOfStock = products.filter(p => p.stock === 0).length;
 
     res.json([
       { name: "In Stock", value: inStock },
       { name: "Low Stock", value: lowStock },
       { name: "Out of Stock", value: outOfStock }
     ]);
-
   } catch (err) {
-    console.log(err);
     res.status(500).json({ message: err.message });
   }
 });
+
 export default router;
